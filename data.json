@@ -4,12 +4,12 @@
     "tagline": "Vibe Coder | Cyber Security | AI Prompt Engineer",
     "bio": "Passionate multi-disciplinary creator bridging the gap between technology, creativity, and security. I build digital experiences that are not just functional, but memorable — from secure web apps to stunning visual content.",
     "location": "Indonesia",
-    "email": "rizki@example.com",
-    "avatar": "assets/images/profile.jpg",
+    "email": "kytzyriski@gmail.com",
+    "avatar": "https://res.cloudinary.com/dhpylcxig/image/upload/q_auto,f_auto,w_800/v1773173373/portfolio-rizki/h8zaeomqccx9ivvf1eln.jpg",
     "socials": {
-      "github": "https://github.com/rizkikurniawan",
-      "linkedin": "https://linkedin.com/in/rizkikurniawan",
-      "instagram": "https://instagram.com/rizkikurniawan"
+      "github": "https://github.com/kytzyriski-oss",
+      "linkedin": "-",
+      "instagram": "https://www.instagram.com/en_holmes?igsh=czhyOTQ4cDNycmJm"
     }
   },
   "skills": [
@@ -355,5 +355,6 @@
         "Video Editing"
       ]
     }
-  ]
+  ],
+  "_publishedAt": 1773173190383
 }
