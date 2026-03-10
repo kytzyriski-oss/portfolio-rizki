@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin CMS — Portfolio Rizki</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=Cabinet+Grotesk:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{min-height:100vh}
+    .fg input,.fg textarea,.fg select{background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 14px;width:100%;font-size:0.9rem;font-family:var(--font-body);outline:none;transition:border-color .3s}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--accent)}
+    .fg label{display:block;font-size:0.82rem;font-weight:600;color:var(--text2);margin-bottom:5px}
+    .fg{margin-bottom:12px}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:600px){.g2{grid-template-columns:1fr}}
+    .item-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg3);border-radius:10px;margin-bottom:8px;border:1px solid var(--border)}
+    .item-info{flex:1;min-width:0}
+    .item-name{font-weight:700;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .item-meta{font-size:.78rem;color:var(--text3);margin-top:3px}
+    .status-bar{border-radius:8px;padding:12px 16px;margin-bottom:1rem;font-size:.85rem;display:none;line-height:1.6}
+    .status-bar.success{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#10b981;display:block}
+    .status-bar.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444;display:block}
+    .status-bar.info{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.3);color:var(--accent);display:block}
+    .status-bar.warning{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:#f59e0b;display:block}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;transition:.3s}
+    .modal-overlay.open{opacity:1;visibility:visible}
+    .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:580px;max-height:90vh;overflow-y:auto}
+    .btn-del{padding:6px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;color:#ef4444;font-size:.78rem;cursor:pointer;font-family:var(--font-body);white-space:nowrap;flex-shrink:0}
+    .btn-edit{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:.78rem;cursor:pointer;font-family:var(--font-body);white-space:nowrap;flex-shrink:0}
+    .btn-pub{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:8px;color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;font-family:var(--font-body);transition:.2s;position:relative;overflow:hidden}
+    .btn-pub:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,.4)}
+    .btn-pub:disabled{opacity:.6;pointer-events:none}
+    .btn-save-big{padding:11px 22px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#0a0a0f;font-weight:700;font-size:.9rem;cursor:pointer;font-family:var(--font-body);transition:.2s}
+    .btn-save-big:hover{opacity:.9;transform:translateY(-1px)}
+    .btn-cancel{padding:10px 20px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text2);cursor:pointer;font-family:var(--font-body)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .spinning{animation:spin 1s linear infinite;display:inline-block}
+    .pulsing{animation:pulse 1.5s ease infinite}
+    .cl-box,.gh-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+    .badge-ok{font-size:.7rem;padding:2px 10px;border-radius:99px;font-weight:700;background:rgba(16,185,129,.15);color:#10b981}
+    .badge-no{font-size:.7rem;padding:2px 10px;border-radius:99px;font-weight:700;background:rgba(239,68,68,.15);color:#ef4444}
+    .info-box{font-size:.78rem;color:var(--text3);background:var(--surface);border-radius:8px;padding:10px 14px;line-height:1.8;margin-top:10px}
+    .preview-ring{width:90px;height:90px;object-fit:cover;border-radius:50%;border:3px solid var(--accent);flex-shrink:0}
+    .url-box{font-size:.72rem;color:var(--accent);word-break:break-all;background:var(--surface);padding:8px 10px;border-radius:6px;border:1px solid var(--border);margin-top:6px}
+    /* Publish progress overlay */
+    .pub-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+    .pub-overlay.show{display:flex}
+    .pub-steps{display:flex;flex-direction:column;gap:10px;min-width:320px}
+    .pub-step{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:.9rem;opacity:.4;transition:.3s}
+    .pub-step.active{opacity:1;border-color:var(--accent)}
+    .pub-step.done{opacity:1;border-color:#10b981;color:#10b981}
+    .pub-step.fail{opacity:1;border-color:#ef4444;color:#ef4444}
+    .pub-step-icon{font-size:1.2rem;width:28px;text-align:center;flex-shrink:0}
+  </style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════ -->
+<div id="admin-login" class="admin-login-screen">
+  <div class="admin-login-box">
+    <div style="text-align:center;margin-bottom:2rem">
+      <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">MRK</div>
+      <div style="color:var(--text3);font-size:.9rem;margin-top:4px">Admin CMS Panel</div>
+    </div>
+    <div class="fg">
+      <label>Password Admin</label>
+      <input type="password" id="admin-pw" placeholder="Masukkan password" autocomplete="current-password">
+      <span id="login-err" style="color:#ef4444;font-size:.8rem;margin-top:4px;display:block"></span>
+    </div>
+    <button onclick="doLogin()" class="btn-save-big" style="width:100%;padding:13px;font-size:1rem">Login 🔐</button>
+    <div style="text-align:center;margin-top:1.5rem">
+      <a href="index.html" style="color:var(--text3);font-size:.85rem">← Kembali ke Portfolio</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PUBLISH PROGRESS OVERLAY ═══════════════════ -->
+<div class="pub-overlay" id="pub-overlay">
+  <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px">🚀 Publishing...</div>
+  <div style="color:var(--text3);font-size:.85rem;margin-bottom:20px" id="pub-subtitle">Menyimpan perubahan ke GitHub</div>
+  <div class="pub-steps">
+    <div class="pub-step" id="ps-1"><span class="pub-step-icon" id="pi-1">☁️</span> Upload foto ke Cloudinary</div>
+    <div class="pub-step" id="ps-2"><span class="pub-step-icon" id="pi-2">📝</span> Update data.json di GitHub</div>
+    <div class="pub-step" id="ps-3"><span class="pub-step-icon" id="pi-3">⚡</span> Netlify auto-deploy</div>
+    <div class="pub-step" id="ps-4"><span class="pub-step-icon" id="pi-4">✅</span> Website live!</div>
+  </div>
+  <div id="pub-msg" style="margin-top:16px;font-size:.85rem;color:var(--text3);text-align:center;max-width:360px"></div>
+  <button id="pub-close" onclick="closePubOverlay()" style="display:none;margin-top:20px;padding:10px 28px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;font-family:var(--font-body);font-size:.95rem">Selesai 🎉</button>
+</div>
+
+<!-- ══ PANEL UTAMA ════════════════════════════════ -->
+<div id="admin-panel" style="display:none">
+
+  <!-- Sticky Navbar -->
+  <nav style="background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem clamp(1rem,3vw,2rem);display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:50;backdrop-filter:blur(10px)">
+    <div style="font-family:var(--font-display);font-weight:900;font-size:1.2rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-right:auto">Admin CMS</div>
+
+    <!-- GitHub status chip -->
+    <div id="gh-status-chip" style="display:none;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:5px 12px;font-size:.78rem;color:var(--text3)">
+      <span id="gh-chip-dot" style="width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0"></span>
+      <span id="gh-chip-text">GitHub belum dikonfigurasi</span>
+    </div>
+
+    <!-- TOMBOL PUBLISH UTAMA -->
+    <button class="btn-pub" id="btn-publish" onclick="doPublish()">
+      🚀 PUBLISH ke Website
+    </button>
+
+    <button onclick="exportJSON()" style="padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:.8rem;cursor:pointer;font-family:var(--font-body)">⬇ Export JSON</button>
+    <button onclick="doLogout()" style="padding:8px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:.8rem;cursor:pointer;font-family:var(--font-body)">Logout</button>
+  </nav>
+
+  <div style="max-width:1100px;margin:0 auto;padding:1.5rem clamp(1rem,3vw,2rem)">
+
+    <div id="admin-status" class="status-bar"></div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs" style="margin-bottom:1.5rem">
+      <button class="admin-tab active" onclick="switchTab('setup',this)">⚙️ Setup</button>
+      <button class="admin-tab" onclick="switchTab('profile',this)">👤 Profil</button>
+      <button class="admin-tab" onclick="switchTab('projects',this)">🗂 Projects</button>
+      <button class="admin-tab" onclick="switchTab('certificates',this)">🏆 Sertifikat</button>
+      <button class="admin-tab" onclick="switchTab('experiences',this)">💼 Pengalaman</button>
+      <button class="admin-tab" onclick="switchTab('skills',this)">⚡ Skills</button>
+    </div>
+
+    <!-- ══ TAB: SETUP ══════════════════════════════ -->
+    <div id="tab-setup" class="admin-section active">
+      <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin-bottom:6px">⚙️ Setup Sekali Saja</h2>
+      <p style="color:var(--text3);font-size:.9rem;margin-bottom:1.5rem">Konfigurasi ini hanya perlu diisi <strong style="color:var(--text)">satu kali</strong>. Setelah itu, klik <strong style="color:#10b981">🚀 PUBLISH</strong> kapanpun kamu mau update website.</p>
+
+      <!-- STEP 1: GitHub -->
+      <div class="gh-box">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:1.4rem">🐙</span>
+          <div>
+            <div style="font-weight:800;font-size:1rem">Step 1 — GitHub Token</div>
+            <div style="font-size:.78rem;color:var(--text3)">Untuk auto-update data.json di repository kamu</div>
+          </div>
+          <span id="gh-badge" class="badge-no" style="margin-left:auto">Belum dikonfigurasi</span>
+        </div>
+
+        <div class="info-box" style="margin-bottom:12px">
+          <strong style="color:var(--text)">Cara dapat GitHub Token (2 menit):</strong><br>
+          1. Buka <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--accent)">github.com/settings/tokens/new</a><br>
+          2. Isi <strong>Note</strong>: "Portfolio CMS"<br>
+          3. <strong>Expiration</strong>: No expiration<br>
+          4. Centang <strong>repo</strong> (full control) → klik <strong>Generate token</strong><br>
+          5. Copy token (ghp_xxxx...) → paste di bawah<br>
+          6. Buat repository baru di GitHub bernama <strong>portfolio-rizki</strong>, upload semua file portfolio ke sana
+        </div>
+
+        <div class="g2">
+          <div class="fg">
+            <label>GitHub Personal Access Token</label>
+            <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxx" autocomplete="off">
+          </div>
+          <div class="fg">
+            <label>GitHub Username</label>
+            <input type="text" id="gh-user" placeholder="username-github-kamu">
+          </div>
+        </div>
+        <div class="fg">
+          <label>Nama Repository</label>
+          <input type="text" id="gh-repo" placeholder="portfolio-rizki" value="portfolio-rizki">
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <button onclick="saveGhConfig()" class="btn-save-big" style="padding:9px 20px;font-size:.85rem">💾 Simpan Config GitHub</button>
+          <button onclick="testGhConfig()" style="padding:9px 20px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:.85rem;cursor:pointer;font-family:var(--font-body);font-weight:600">🔍 Test Koneksi</button>
+        </div>
+        <div id="gh-test-result" style="margin-top:10px;font-size:.82rem;display:none"></div>
+      </div>
+
+      <!-- STEP 2: Netlify -->
+      <div class="gh-box">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:1.4rem">🔗</span>
+          <div>
+            <div style="font-weight:800;font-size:1rem">Step 2 — Hubungkan Netlify ke GitHub</div>
+            <div style="font-size:.78rem;color:var(--text3)">Agar Netlify auto-deploy setiap ada update di GitHub</div>
+          </div>
+          <span id="nl-badge" class="badge-no" style="margin-left:auto">Perlu dikonfigurasi</span>
+        </div>
+        <div class="info-box">
+          <strong style="color:var(--text)">Lakukan ini sekali saja di Netlify:</strong><br>
+          1. Buka <a href="https://app.netlify.com" target="_blank" style="color:var(--accent)">app.netlify.com</a> → Login<br>
+          2. Klik <strong>Add new site</strong> → <strong>Import an existing project</strong><br>
+          3. Pilih <strong>GitHub</strong> → authorize → pilih repo <strong>portfolio-rizki</strong><br>
+          4. Build settings biarkan default → klik <strong>Deploy site</strong><br>
+          5. ✅ Selesai! Setiap kamu klik Publish, Netlify otomatis update dalam ~30 detik
+        </div>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <input type="checkbox" id="nl-done" onchange="saveNlDone(this.checked)" style="width:16px;height:16px;cursor:pointer">
+          <label for="nl-done" style="font-size:.88rem;cursor:pointer;font-weight:600">✅ Sudah menghubungkan Netlify ke GitHub</label>
+        </div>
+      </div>
+
+      <!-- STEP 3: Cloudinary -->
+      <div class="cl-box">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <span style="font-size:1.4rem">☁️</span>
+          <div>
+            <div style="font-weight:800;font-size:1rem">Step 3 — Cloudinary (Upload Foto)</div>
+            <div style="font-size:.78rem;color:var(--text3)">Untuk upload foto profil & project ke cloud</div>
+          </div>
+          <span id="cl-badge" class="badge-no" style="margin-left:auto">Belum dikonfigurasi</span>
+        </div>
+        <div class="info-box" style="margin-bottom:12px">
+          <strong style="color:var(--text)">Daftar & setup Cloudinary gratis:</strong><br>
+          1. Daftar di <a href="https://cloudinary.com/users/register/free" target="_blank" style="color:var(--accent)">cloudinary.com</a><br>
+          2. Dashboard → catat <strong>Cloud Name</strong><br>
+          3. Settings ⚙️ → Upload → Add upload preset → <strong>Signing mode: Unsigned</strong> → Save<br>
+          4. Copy nama preset → paste di bawah
+        </div>
+        <div class="g2">
+          <div class="fg"><label>Cloud Name</label><input id="cl-name" placeholder="contoh: dxyz123abc"></div>
+          <div class="fg"><label>Upload Preset (Unsigned)</label><input id="cl-preset" placeholder="contoh: portfolio_rizki"></div>
+        </div>
+        <button onclick="saveClConfig()" class="btn-save-big" style="padding:9px 20px;font-size:.85rem">💾 Simpan Config Cloudinary</button>
+      </div>
+
+      <!-- Summary -->
+      <div id="setup-summary" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-top:4px">
+        <div style="font-weight:700;margin-bottom:10px">📊 Status Setup:</div>
+        <div id="setup-status-list" style="display:flex;flex-direction:column;gap:6px;font-size:.88rem"></div>
+        <div id="setup-ready-msg" style="display:none;margin-top:14px;padding:12px 16px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:8px;color:#10b981;font-weight:600">
+          🎉 Semua sudah dikonfigurasi! Kamu bisa klik <strong>🚀 PUBLISH</strong> kapanpun.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB: PROFIL ══════════════════════════════ -->
+    <div id="tab-profile" class="admin-section">
+      <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:1.25rem">👤 Profil</h2>
+      <div class="admin-card">
+        <div class="g2">
+          <div class="fg"><label>Nama Lengkap</label><input id="p-name" placeholder="Muhammad Rizki Kurniawan"></div>
+          <div class="fg"><label>Tagline</label><input id="p-tagline" placeholder="Vibe Coder | Cyber Security | AI"></div>
+        </div>
+        <div class="fg"><label>Bio</label><textarea id="p-bio" rows="4" placeholder="Ceritakan tentang dirimu..."></textarea></div>
+        <div class="g2">
+          <div class="fg"><label>Lokasi</label><input id="p-location" placeholder="Indonesia"></div>
+          <div class="fg"><label>Email</label><input type="email" id="p-email" placeholder="rizki@example.com"></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:var(--text2);margin-bottom:8px">🔗 Sosial Media</div>
+        <div class="g2">
+          <div class="fg"><label>GitHub URL</label><input type="url" id="p-github" placeholder="https://github.com/..."></div>
+          <div class="fg"><label>LinkedIn URL</label><input type="url" id="p-linkedin" placeholder="https://linkedin.com/in/..."></div>
+          <div class="fg"><label>Instagram URL</label><input type="url" id="p-instagram" placeholder="https://instagram.com/..."></div>
+        </div>
+
+        <!-- Foto Profil -->
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+          <div style="font-size:.85rem;font-weight:700;color:var(--text2);margin-bottom:10px">📸 Foto Profil</div>
+          <div class="drop-zone" id="avatar-drop" ondragover="onDragOver(event)" ondrop="onAvatarDrop(event)" onclick="document.getElementById('avatar-file').click()">
+            <div id="dz-content"><div class="drop-icon">📸</div><div>Drag & drop foto, atau klik untuk pilih</div><div style="font-size:.75rem;margin-top:4px;color:var(--text3)">Otomatis upload ke Cloudinary ☁️</div></div>
+            <div id="dz-loading" style="display:none;text-align:center"><div class="spinning" style="font-size:2rem">⏳</div><div style="margin-top:8px;font-size:.9rem">Uploading...</div><div id="dz-progress" style="font-size:.75rem;color:var(--accent);margin-top:4px"></div></div>
+          </div>
+          <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="onAvatarFile(this)">
+          <div id="avatar-preview" style="display:none;margin-top:12px;background:var(--bg3);border:1px solid rgba(16,185,129,.3);border-radius:10px;padding:14px">
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <img id="avatar-img" class="preview-ring" src="" alt="Preview">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:.82rem;color:#10b981;font-weight:600;margin-bottom:4px">✅ Foto siap! URL tersimpan.</div>
+                <div id="avatar-url" class="url-box"></div>
+                <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+                  <button onclick="copyUrl()" style="padding:5px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:.75rem;cursor:pointer;font-family:var(--font-body)">📋 Copy URL</button>
+                  <button onclick="document.getElementById('avatar-file').click()" style="padding:5px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:.75rem;cursor:pointer;font-family:var(--font-body)">🔄 Ganti Foto</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Manual URL -->
+          <div style="margin-top:10px">
+            <div style="font-size:.78rem;color:var(--text3);margin-bottom:6px">Atau paste URL foto langsung:</div>
+            <div style="display:flex;gap:8px">
+              <input type="url" id="avatar-manual" placeholder="https://res.cloudinary.com/..." style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:.85rem;outline:none;font-family:var(--font-body)">
+              <button onclick="applyManual()" style="padding:9px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-size:.85rem;cursor:pointer;font-family:var(--font-body);font-weight:600">✅ Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button onclick="saveProfile()" class="btn-save-big">Simpan Profil</button>
+          <button class="btn-pub" onclick="doPublish()" style="font-size:.85rem;padding:10px 20px">🚀 Simpan & Publish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB: PROJECTS ════════════════════════════ -->
+    <div id="tab-projects" class="admin-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+        <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">🗂 Projects <span id="proj-count" style="font-size:1rem;color:var(--text3)"></span></h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="openModal('project')" class="btn-save-big">+ Tambah</button>
+          <button class="btn-pub" onclick="doPublish()" style="font-size:.82rem;padding:9px 18px">🚀 Publish</button>
+        </div>
+      </div>
+      <div id="proj-list"></div>
+    </div>
+
+    <!-- ══ TAB: SERTIFIKAT ══════════════════════════ -->
+    <div id="tab-certificates" class="admin-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+        <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">🏆 Sertifikat</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="openModal('certificate')" class="btn-save-big">+ Tambah</button>
+          <button class="btn-pub" onclick="doPublish()" style="font-size:.82rem;padding:9px 18px">🚀 Publish</button>
+        </div>
+      </div>
+      <div id="cert-list"></div>
+    </div>
+
+    <!-- ══ TAB: PENGALAMAN ══════════════════════════ -->
+    <div id="tab-experiences" class="admin-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+        <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">💼 Pengalaman</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="openModal('experience')" class="btn-save-big">+ Tambah</button>
+          <button class="btn-pub" onclick="doPublish()" style="font-size:.82rem;padding:9px 18px">🚀 Publish</button>
+        </div>
+      </div>
+      <div id="exp-list"></div>
+    </div>
+
+    <!-- ══ TAB: SKILLS ══════════════════════════════ -->
+    <div id="tab-skills" class="admin-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+        <h2 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">⚡ Skills</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="openModal('skill')" class="btn-save-big">+ Tambah</button>
+          <button class="btn-pub" onclick="doPublish()" style="font-size:.82rem;padding:9px 18px">🚀 Publish</button>
+        </div>
+      </div>
+      <div id="skills-list"></div>
+    </div>
+
+  </div><!-- end main container -->
+</div><!-- end admin-panel -->
+
+<!-- ══ MODAL ════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalBg(event)">
+  <div class="modal-box">
+    <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem" id="modal-title">Item</div>
+    <div id="modal-body"></div>
+    <div style="display:flex;gap:10px;margin-top:1.5rem;justify-content:flex-end;flex-wrap:wrap">
+      <button class="btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-save-big" onclick="saveModal()">Simpan ✅</button>
+      <button class="btn-pub" onclick="saveModal(true)" style="font-size:.85rem;padding:10px 18px">Simpan & 🚀 Publish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================
+   ADMIN CMS - Full Script dengan GitHub Auto-Publish
+   ================================================ */
+
+// ── CONFIG ──────────────────────────────────────
+// Edit Here: Ganti password admin
+const PW_HASH = btoa('rizki2026');
+const DATA_KEY = 'portfolioData';
+const GH_KEY   = 'githubConfig';
+const CL_KEY   = 'cloudinaryConfig';
+const NL_KEY   = 'netlifyDone';
+
+let gData = null;
+let mType = null, mIdx = null, mItem = null;
+
+// ── AUTH ─────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('admin-pw').value;
+  if (btoa(pw) === PW_HASH) {
+    sessionStorage.setItem('adminOk','1');
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    initAdmin();
+  } else {
+    document.getElementById('login-err').textContent = '❌ Password salah. Coba lagi.';
+  }
+}
+document.getElementById('admin-pw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+function doLogout() { sessionStorage.removeItem('adminOk'); location.reload(); }
+if (sessionStorage.getItem('adminOk') === '1') {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+}
+
+// ── INIT ─────────────────────────────────────────
+async function initAdmin() {
+  await loadData();
+  loadGhConfig();
+  loadClConfig();
+  loadNlDone();
+  renderAll();
+  updateSetupSummary();
+  updateGhChip();
+}
+
+// ── DATA LOAD ─────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch('data.json?t=' + Date.now(), { cache:'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const serverData = await res.json();
+    const localRaw = localStorage.getItem(DATA_KEY);
+    if (localRaw) {
+      const local = JSON.parse(localRaw);
+      gData = (local._editedAt && (!serverData._editedAt || local._editedAt > serverData._editedAt)) ? local : serverData;
+    } else {
+      gData = serverData;
+    }
+  } catch(e) {
+    const localRaw = localStorage.getItem(DATA_KEY);
+    gData = localRaw ? JSON.parse(localRaw) : getDefault();
+    showStatus('⚠️ Memuat dari lokal (tidak bisa konek server).','warning');
+  }
+}
+
+function getDefault() {
+  return { profile:{ name:'Muhammad Rizki Kurniawan', tagline:'Vibe Coder | Cyber Security | AI', bio:'', avatar:'assets/images/profile.jpg', location:'Indonesia', email:'rizki@example.com', socials:{} }, skills:[], projects:[], certificates:[], experiences:[] };
+}
+
+function saveLocal() {
+  try { gData._editedAt = Date.now(); localStorage.setItem(DATA_KEY, JSON.stringify(gData)); return true; }
+  catch(e) { showStatus('❌ Gagal simpan lokal: ' + e.message,'error'); return false; }
+}
+
+// ── GITHUB CONFIG ────────────────────────────────
+function saveGhConfig() {
+  const token = document.getElementById('gh-token').value.trim();
+  const user  = document.getElementById('gh-user').value.trim();
+  const repo  = document.getElementById('gh-repo').value.trim();
+  if (!token || !user || !repo) { showStatus('❌ Isi semua field GitHub dulu!','error'); return; }
+  localStorage.setItem(GH_KEY, JSON.stringify({ token, user, repo }));
+  updateGhBadge(); updateGhChip(); updateSetupSummary();
+  showStatus('✅ Config GitHub tersimpan!','success');
+}
+
+function loadGhConfig() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem(GH_KEY) || '{}');
+    if (cfg.token) document.getElementById('gh-token').value = cfg.token;
+    if (cfg.user)  document.getElementById('gh-user').value  = cfg.user;
+    if (cfg.repo)  document.getElementById('gh-repo').value  = cfg.repo;
+    updateGhBadge();
+  } catch(e) {}
+}
+
+function getGhCfg() { try { return JSON.parse(localStorage.getItem(GH_KEY) || '{}'); } catch(e) { return {}; } }
+
+function updateGhBadge() {
+  const cfg = getGhCfg();
+  const badge = document.getElementById('gh-badge');
+  const ok = !!(cfg.token && cfg.user && cfg.repo);
+  if (badge) { badge.className = ok ? 'badge-ok' : 'badge-no'; badge.textContent = ok ? '✅ Terkonfigurasi' : 'Belum dikonfigurasi'; }
+}
+
+function updateGhChip() {
+  const cfg = getGhCfg();
+  const chip = document.getElementById('gh-status-chip');
+  const dot  = document.getElementById('gh-chip-dot');
+  const txt  = document.getElementById('gh-chip-text');
+  if (!chip) return;
+  chip.style.display = 'flex';
+  const ok = !!(cfg.token && cfg.user && cfg.repo);
+  if (dot) dot.style.background = ok ? '#10b981' : '#ef4444';
+  if (txt) txt.textContent = ok ? `GitHub: ${cfg.user}/${cfg.repo}` : 'GitHub belum dikonfigurasi';
+}
+
+async function testGhConfig() {
+  const cfg = getGhCfg();
+  const result = document.getElementById('gh-test-result');
+  if (!cfg.token || !cfg.user || !cfg.repo) { showStatus('❌ Isi config GitHub dulu!','error'); return; }
+  result.style.display = 'block';
+  result.innerHTML = '<span class="spinning">⏳</span> Menghubungi GitHub...';
+  result.style.color = 'var(--text3)';
+  try {
+    const res = await fetch(`https://api.github.com/repos/${cfg.user}/${cfg.repo}`, {
+      headers: { 'Authorization': 'token ' + cfg.token, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      result.innerHTML = `✅ Berhasil! Repository <strong>${data.full_name}</strong> ditemukan.`;
+      result.style.color = '#10b981';
+      showStatus('✅ Koneksi GitHub berhasil!','success');
+    } else {
+      const err = await res.json();
+      result.innerHTML = `❌ Gagal: ${err.message}`;
+      result.style.color = '#ef4444';
+    }
+  } catch(e) {
+    result.innerHTML = '❌ Error: ' + e.message;
+    result.style.color = '#ef4444';
+  }
+}
+
+// ── CLOUDINARY CONFIG ────────────────────────────
+function saveClConfig() {
+  const name   = document.getElementById('cl-name').value.trim();
+  const preset = document.getElementById('cl-preset').value.trim();
+  if (!name || !preset) { showStatus('❌ Isi Cloud Name dan Upload Preset!','error'); return; }
+  localStorage.setItem(CL_KEY, JSON.stringify({ name, preset }));
+  updateClBadge(); updateSetupSummary();
+  showStatus('✅ Config Cloudinary tersimpan!','success');
+}
+
+function loadClConfig() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem(CL_KEY) || '{}');
+    if (cfg.name)   setVal('cl-name', cfg.name);
+    if (cfg.preset) setVal('cl-preset', cfg.preset);
+    updateClBadge();
+  } catch(e) {}
+}
+
+function getClCfg() { try { return JSON.parse(localStorage.getItem(CL_KEY) || '{}'); } catch(e) { return {}; } }
+
+function updateClBadge() {
+  const cfg = getClCfg();
+  const badge = document.getElementById('cl-badge');
+  const ok = !!(cfg.name && cfg.preset);
+  if (badge) { badge.className = ok ? 'badge-ok' : 'badge-no'; badge.textContent = ok ? '✅ Terkonfigurasi' : 'Belum dikonfigurasi'; }
+}
+
+// ── NETLIFY DONE ─────────────────────────────────
+function saveNlDone(val) {
+  localStorage.setItem(NL_KEY, val ? '1' : '0');
+  updateNlBadge(); updateSetupSummary();
+}
+function loadNlDone() {
+  const done = localStorage.getItem(NL_KEY) === '1';
+  const cb = document.getElementById('nl-done');
+  if (cb) cb.checked = done;
+  updateNlBadge();
+}
+function updateNlBadge() {
+  const done = localStorage.getItem(NL_KEY) === '1';
+  const badge = document.getElementById('nl-badge');
+  if (badge) { badge.className = done ? 'badge-ok' : 'badge-no'; badge.textContent = done ? '✅ Terhubung' : 'Perlu dikonfigurasi'; }
+}
+
+// ── SETUP SUMMARY ────────────────────────────────
+function updateSetupSummary() {
+  const gh = getGhCfg(), cl = getClCfg();
+  const checks = [
+    { ok: !!(gh.token && gh.user && gh.repo), label: 'GitHub Token & Repository' },
+    { ok: localStorage.getItem(NL_KEY) === '1',   label: 'Netlify terhubung ke GitHub' },
+    { ok: !!(cl.name && cl.preset),               label: 'Cloudinary untuk upload foto' },
+  ];
+  const list = document.getElementById('setup-status-list');
+  if (list) list.innerHTML = checks.map(c => `<div style="display:flex;align-items:center;gap:8px"><span>${c.ok ? '✅' : '⬜'}</span><span style="color:${c.ok ? 'var(--text)' : 'var(--text3)'}">${c.label}</span></div>`).join('');
+  const allOk = checks.every(c => c.ok);
+  const readyMsg = document.getElementById('setup-ready-msg');
+  if (readyMsg) readyMsg.style.display = allOk ? 'block' : 'none';
+}
+
+// ── CLOUDINARY UPLOAD ────────────────────────────
+async function uploadToCloudinary(file) {
+  const cfg = getClCfg();
+  if (!cfg.name || !cfg.preset) { showStatus('❌ Setup Cloudinary di tab Setup dulu!','error'); return null; }
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', cfg.preset);
+  fd.append('folder', 'portfolio-rizki');
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cfg.name}/image/upload`, { method:'POST', body:fd });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message);
+    return json.secure_url.replace('/upload/', '/upload/q_auto,f_auto,w_800/');
+  } catch(e) {
+    showStatus('❌ Upload Cloudinary gagal: ' + e.message,'error');
+    return null;
+  }
+}
+
+// ── AVATAR HANDLERS ──────────────────────────────
+function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function onAvatarDrop(e) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); const f=e.dataTransfer.files[0]; if(f) processAvatar(f); }
+function onAvatarFile(input) { if(input.files[0]) processAvatar(input.files[0]); input.value=''; }
+
+async function processAvatar(file) {
+  if (!file.type.startsWith('image/')) { showStatus('❌ Pilih file gambar','error'); return; }
+  if (file.size > 10*1024*1024) { showStatus('❌ Maksimal 10MB','error'); return; }
+  document.getElementById('dz-content').style.display = 'none';
+  document.getElementById('dz-loading').style.display = 'block';
+  const steps = ['Menghubungkan...','Uploading...','Memproses...','Selesai!'];
+  let si=0; const prog=document.getElementById('dz-progress');
+  const iv = setInterval(() => { if(prog && si<steps.length) prog.textContent=steps[si++]; }, 800);
+  const url = await uploadToCloudinary(file);
+  clearInterval(iv);
+  document.getElementById('dz-content').style.display = 'block';
+  document.getElementById('dz-loading').style.display = 'none';
+  if (url) {
+    if (gData?.profile) gData.profile.avatar = url;
+    saveLocal();
+    showAvatarPreview(url);
+    setVal('avatar-manual', url);
+    showStatus('🎉 Foto berhasil diupload! Klik 🚀 Publish untuk live.','success');
+  }
+}
+
+function showAvatarPreview(url) {
+  const prev=document.getElementById('avatar-preview'), img=document.getElementById('avatar-img'), urlEl=document.getElementById('avatar-url');
+  if(prev) prev.style.display='block';
+  if(img) { img.src=url; img.onerror=()=>{ img.src='assets/images/profile.jpg'; }; }
+  if(urlEl) urlEl.textContent=url;
+}
+
+function applyManual() {
+  const url = getVal('avatar-manual');
+  if (!url || !url.startsWith('http')) { showStatus('❌ URL tidak valid','error'); return; }
+  if (gData?.profile) gData.profile.avatar = url;
+  saveLocal(); showAvatarPreview(url);
+  showStatus('✅ URL diterapkan! Klik 🚀 Publish untuk live.','success');
+}
+
+function copyUrl() {
+  const url = document.getElementById('avatar-url')?.textContent;
+  if(url) navigator.clipboard.writeText(url).then(()=>showStatus('📋 URL di-copy!','success'));
+}
+
+// ── PROFILE SAVE ─────────────────────────────────
+function saveProfile() {
+  if (!gData) return;
+  gData.profile = {
+    name:     getVal('p-name'),
+    tagline:  getVal('p-tagline'),
+    bio:      getVal('p-bio'),
+    location: getVal('p-location'),
+    email:    getVal('p-email'),
+    avatar:   gData.profile?.avatar || 'assets/images/profile.jpg',
+    socials: { github:getVal('p-github'), linkedin:getVal('p-linkedin'), instagram:getVal('p-instagram') }
+  };
+  if (saveLocal()) showStatus('✅ Profil tersimpan lokal. Klik 🚀 Publish untuk live!','success');
+}
+
+// ══════════════════════════════════════════════════
+// 🚀 PUBLISH KE GITHUB (auto-deploy Netlify)
+// ══════════════════════════════════════════════════
+async function doPublish() {
+  const cfg = getGhCfg();
+  if (!cfg.token || !cfg.user || !cfg.repo) {
+    showStatus('❌ Setup GitHub di tab ⚙️ Setup dulu!','error');
+    switchTab('setup', document.querySelector('.admin-tab'));
+    return;
+  }
+
+  // Tampilkan overlay progress
+  const overlay = document.getElementById('pub-overlay');
+  overlay.classList.add('show');
+  setPubStep(1,'active'); setPubStep(2,''); setPubStep(3,''); setPubStep(4,'');
+  document.getElementById('pub-close').style.display = 'none';
+  document.getElementById('pub-msg').textContent = '';
+
+  // Simpan profil terakhir dulu
+  saveProfile();
+
+  try {
+    // STEP 1: Check apakah ada foto pending upload (sudah di-handle sebelumnya via Cloudinary)
+    setPubMsg('Mempersiapkan data...');
+    await sleep(400);
+    setPubStep(1,'done'); setPubStep(2,'active');
+
+    // STEP 2: Push data.json ke GitHub
+    setPubMsg('Mengupdate data.json di GitHub...');
+    const clean = { ...gData }; delete clean._editedAt;
+    const content = JSON.stringify(clean, null, 2);
+    const b64 = btoa(unescape(encodeURIComponent(content)));
+
+    // Ambil SHA file yang ada (diperlukan untuk update)
+    let sha = null;
+    try {
+      const shaRes = await fetch(
+        `https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/data.json`,
+        { headers: { 'Authorization': 'token ' + cfg.token, 'Accept': 'application/vnd.github.v3+json' } }
+      );
+      if (shaRes.ok) { const shaData = await shaRes.json(); sha = shaData.sha; }
+    } catch(e) {}
+
+    // Commit data.json ke GitHub
+    const body = {
+      message: '📊 Update portfolio data via Admin CMS — ' + new Date().toLocaleString('id-ID'),
+      content: b64,
+      ...(sha ? { sha } : {})
+    };
+
+    const pushRes = await fetch(
+      `https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/data.json`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'token ' + cfg.token,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+    );
+
+    if (!pushRes.ok) {
+      const err = await pushRes.json();
+      throw new Error(err.message || 'GitHub push gagal');
+    }
+
+    setPubStep(2,'done'); setPubStep(3,'active');
+    setPubMsg('GitHub updated! Netlify sedang deploy...');
+    await sleep(2000); // tunggu Netlify mulai deploy
+
+    setPubStep(3,'done'); setPubStep(4,'active');
+    setPubMsg('🎉 Berhasil! Website akan live dalam ~30 detik.');
+    await sleep(800);
+    setPubStep(4,'done');
+
+    document.getElementById('pub-subtitle').textContent = '✅ Publish berhasil!';
+    document.getElementById('pub-msg').innerHTML = `Website kamu sedang diupdate. Buka <a href="https://${cfg.user}.netlify.app" target="_blank" style="color:var(--accent)">website kamu</a> dalam ~30 detik untuk melihat perubahan.`;
+    document.getElementById('pub-close').style.display = 'inline-block';
+
+    // Update localStorage timestamp
+    gData._publishedAt = Date.now();
+    saveLocal();
+
+  } catch(e) {
+    // Error handling
+    const failStep = [1,2,3,4].find(n => document.getElementById('ps-'+n).classList.contains('active')) || 2;
+    setPubStep(failStep, 'fail');
+    setPubMsg('❌ Error: ' + e.message);
+    document.getElementById('pub-subtitle').textContent = '❌ Publish gagal';
+    document.getElementById('pub-close').style.display = 'inline-block';
+    showStatus('❌ Publish gagal: ' + e.message,'error');
+  }
+}
+
+function setPubStep(n, state) {
+  const el = document.getElementById('ps-'+n);
+  const ic = document.getElementById('pi-'+n);
+  if (!el) return;
+  el.classList.remove('active','done','fail');
+  if (state) el.classList.add(state);
+  if (ic) {
+    if (state==='active') ic.innerHTML='<span class="spinning">⏳</span>';
+    else if (state==='done') ic.textContent='✅';
+    else if (state==='fail') ic.textContent='❌';
+    else ic.textContent = ['','☁️','📝','⚡','✅'][n];
+  }
+}
+function setPubMsg(msg) { const el=document.getElementById('pub-msg'); if(el) el.textContent=msg; }
+function closePubOverlay() { document.getElementById('pub-overlay').classList.remove('show'); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── EXPORT JSON (fallback) ───────────────────────
+function exportJSON() {
+  if (!gData) return;
+  const clean = { ...gData }; delete clean._editedAt;
+  const blob = new Blob([JSON.stringify(clean,null,2)], { type:'application/json' });
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='data.json'; a.click();
+  showStatus('⬇ data.json didownload! Ini untuk backup atau deploy manual.','info');
+}
+
+// ── TABS ─────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── STATUS BAR ───────────────────────────────────
+function showStatus(msg, type='info') {
+  const el=document.getElementById('admin-status');
+  el.innerHTML=msg; el.className='status-bar '+type;
+  setTimeout(()=>{ el.className='status-bar'; },8000);
+}
+
+// ── RENDER ALL ───────────────────────────────────
+function renderAll() { renderProfile(); renderProjects(); renderCerts(); renderExps(); renderSkillsList(); }
+
+// ── RENDER PROFILE ───────────────────────────────
+function renderProfile() {
+  const p = gData?.profile || {};
+  setVal('p-name',p.name); setVal('p-tagline',p.tagline); setVal('p-bio',p.bio);
+  setVal('p-location',p.location); setVal('p-email',p.email);
+  setVal('p-github',p.socials?.github); setVal('p-linkedin',p.socials?.linkedin); setVal('p-instagram',p.socials?.instagram);
+  if (p.avatar) { showAvatarPreview(p.avatar); setVal('avatar-manual',p.avatar); }
+}
+
+// ── RENDER LISTS ─────────────────────────────────
+function renderProjects() {
+  const list=document.getElementById('proj-list'), items=gData?.projects||[];
+  document.getElementById('proj-count').textContent=`(${items.length})`;
+  list.innerHTML = items.length ? items.map((p,i)=>`
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-name">${esc(p.name)} ${p.featured?'<span style="font-size:.65rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0a0a0f;padding:2px 7px;border-radius:99px;margin-left:5px">Featured</span>':''}</div>
+        <div class="item-meta">${esc(p.category)} · ${esc(p.date)}</div>
+      </div>
+      <button class="btn-edit" onclick="openModal('project',${i})">✏️ Edit</button>
+      <button class="btn-del" onclick="delItem('projects',${i})">🗑</button>
+    </div>`).join('') : emptyMsg('project');
+}
+
+function renderCerts() {
+  const list=document.getElementById('cert-list'), items=gData?.certificates||[];
+  list.innerHTML = items.length ? items.map((c,i)=>`
+    <div class="item-row">
+      <div style="font-size:1.8rem;flex-shrink:0">${esc(c.badge)}</div>
+      <div class="item-info"><div class="item-name">${esc(c.name)}</div><div class="item-meta">${esc(c.issuer)} · ${esc(c.date)}</div></div>
+      <button class="btn-edit" onclick="openModal('certificate',${i})">✏️ Edit</button>
+      <button class="btn-del" onclick="delItem('certificates',${i})">🗑</button>
+    </div>`).join('') : emptyMsg('sertifikat');
+}
+
+function renderExps() {
+  const list=document.getElementById('exp-list'), items=gData?.experiences||[];
+  list.innerHTML = items.length ? items.map((e,i)=>`
+    <div class="item-row">
+      <div class="item-info"><div class="item-name">${esc(e.role)}</div><div class="item-meta">${esc(e.company)} · ${esc(e.period)}</div></div>
+      <button class="btn-edit" onclick="openModal('experience',${i})">✏️ Edit</button>
+      <button class="btn-del" onclick="delItem('experiences',${i})">🗑</button>
+    </div>`).join('') : emptyMsg('pengalaman');
+}
+
+function renderSkillsList() {
+  const list=document.getElementById('skills-list'), items=gData?.skills||[];
+  list.innerHTML = items.length ? items.map((s,i)=>`
+    <div class="item-row">
+      <div style="font-size:1.5rem;flex-shrink:0">${esc(s.icon)}</div>
+      <div class="item-info">
+        <div class="item-name">${esc(s.name)}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <div style="flex:1;max-width:150px;height:4px;background:var(--bg);border-radius:99px;overflow:hidden"><div style="height:100%;width:${s.level}%;background:${esc(s.color)};border-radius:99px"></div></div>
+          <span style="font-size:.75rem;color:var(--text3)">${s.level}%</span>
+        </div>
+      </div>
+      <button class="btn-edit" onclick="openModal('skill',${i})">✏️ Edit</button>
+      <button class="btn-del" onclick="delItem('skills',${i})">🗑</button>
+    </div>`).join('') : emptyMsg('skill');
+}
+
+// ── MODAL ─────────────────────────────────────────
+const CATS=['Vibe Coding','Cyber Security','AI Prompt Engineer','Editing Video/Foto','Fotografi','Data Entry/Data Science'];
+const EXP_TYPES=['Full-time','Part-time','Freelance','Internship','Contract'];
+
+function openModal(type, idx=null) {
+  mType=type; mIdx=idx; const isEdit=idx!==null;
+  if (type==='project') {
+    mItem=isEdit?{...gData.projects[idx]}:{id:Date.now(),name:'',category:'Vibe Coding',desc:'',image:'',tech:[],url:'#',github:'',featured:false,date:new Date().toISOString().slice(0,7)};
+    document.getElementById('modal-title').textContent=isEdit?'✏️ Edit Project':'+ Tambah Project';
+    document.getElementById('modal-body').innerHTML=`
+      <div class="fg"><label>Nama Project *</label><input id="m-name" value="${esc(mItem.name)}" placeholder="Nama project"></div>
+      <div class="g2">
+        <div class="fg"><label>Kategori</label><select id="m-cat">${CATS.map(c=>`<option value="${c}" ${mItem.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+        <div class="fg"><label>Tanggal</label><input id="m-date" type="month" value="${esc(mItem.date)}"></div>
+      </div>
+      <div class="fg"><label>Deskripsi *</label><textarea id="m-desc" rows="3">${esc(mItem.desc)}</textarea></div>
+      <div class="fg"><label>Teknologi (pisah koma)</label><input id="m-tech" value="${(mItem.tech||[]).join(', ')}" placeholder="JavaScript, Python"></div>
+      <div class="g2">
+        <div class="fg"><label>URL Live Demo</label><input id="m-url" type="url" value="${esc(mItem.url)}" placeholder="https://..."></div>
+        <div class="fg"><label>URL GitHub</label><input id="m-github" type="url" value="${esc(mItem.github||'')}" placeholder="https://github.com/..."></div>
+      </div>
+      <div class="fg"><label>URL Gambar (Cloudinary URL)</label><input id="m-image" type="url" value="${esc(mItem.image||'')}" placeholder="https://res.cloudinary.com/..."></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" id="m-featured" ${mItem.featured?'checked':''}><label for="m-featured" style="cursor:pointer;font-size:.9rem">⭐ Featured project</label></div>`;
+  }
+  else if (type==='certificate') {
+    mItem=isEdit?{...gData.certificates[idx]}:{id:Date.now(),name:'',issuer:'',date:'',badge:'🏆',url:''};
+    document.getElementById('modal-title').textContent=isEdit?'✏️ Edit Sertifikat':'+ Tambah Sertifikat';
+    document.getElementById('modal-body').innerHTML=`
+      <div class="fg"><label>Nama Sertifikat *</label><input id="m-name" value="${esc(mItem.name)}" placeholder="Nama sertifikat"></div>
+      <div class="g2">
+        <div class="fg"><label>Penerbit *</label><input id="m-issuer" value="${esc(mItem.issuer)}" placeholder="Google, EC-Council..."></div>
+        <div class="fg"><label>Tanggal</label><input id="m-date" type="month" value="${esc(mItem.date)}"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label>Emoji Badge</label><input id="m-badge" value="${esc(mItem.badge)}" placeholder="🏆" maxlength="4"></div>
+        <div class="fg"><label>URL Sertifikat</label><input id="m-url" type="url" value="${esc(mItem.url)}" placeholder="https://..."></div>
+      </div>`;
+  }
+  else if (type==='experience') {
+    mItem=isEdit?{...gData.experiences[idx]}:{id:Date.now(),role:'',company:'',period:'',type:'Full-time',desc:'',skills:[]};
+    document.getElementById('modal-title').textContent=isEdit?'✏️ Edit Pengalaman':'+ Tambah Pengalaman';
+    document.getElementById('modal-body').innerHTML=`
+      <div class="fg"><label>Jabatan / Role *</label><input id="m-role" value="${esc(mItem.role)}" placeholder="Frontend Developer"></div>
+      <div class="g2">
+        <div class="fg"><label>Perusahaan *</label><input id="m-company" value="${esc(mItem.company)}" placeholder="Nama perusahaan"></div>
+        <div class="fg"><label>Periode</label><input id="m-period" value="${esc(mItem.period)}" placeholder="2022 – Present"></div>
+      </div>
+      <div class="fg"><label>Tipe</label><select id="m-type">${EXP_TYPES.map(t=>`<option ${mItem.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+      <div class="fg"><label>Deskripsi</label><textarea id="m-desc" rows="3">${esc(mItem.desc)}</textarea></div>
+      <div class="fg"><label>Skills (pisah koma)</label><input id="m-skills" value="${(mItem.skills||[]).join(', ')}" placeholder="JavaScript, Python"></div>`;
+  }
+  else if (type==='skill') {
+    mItem=isEdit?{...gData.skills[idx]}:{name:'',icon:'⚡',level:80,color:'#00d4ff'};
+    document.getElementById('modal-title').textContent=isEdit?'✏️ Edit Skill':'+ Tambah Skill';
+    document.getElementById('modal-body').innerHTML=`
+      <div class="g2">
+        <div class="fg"><label>Nama Skill *</label><input id="m-name" value="${esc(mItem.name)}" placeholder="JavaScript"></div>
+        <div class="fg"><label>Emoji</label><input id="m-icon" value="${esc(mItem.icon)}" placeholder="💻" maxlength="4"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label>Level (0–100)</label><input id="m-level" type="number" value="${mItem.level}" min="0" max="100"></div>
+        <div class="fg"><label>Warna</label><input id="m-color" type="color" value="${esc(mItem.color)}" style="height:42px;padding:4px;cursor:pointer;width:100%;border-radius:8px"></div>
+      </div>`;
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function saveModal(andPublish=false) {
+  if (!mType||!gData) return;
+  try {
+    if (mType==='project') {
+      mItem.name=getVal('m-name'); mItem.category=getVal('m-cat'); mItem.date=getVal('m-date');
+      mItem.desc=getVal('m-desc'); mItem.tech=getVal('m-tech').split(',').map(s=>s.trim()).filter(Boolean);
+      mItem.url=getVal('m-url')||'#'; mItem.github=getVal('m-github')||null;
+      mItem.image=getVal('m-image')||''; mItem.featured=document.getElementById('m-featured')?.checked||false;
+      if (!mItem.name) { alert('Nama project wajib diisi'); return; }
+      saveToArr('projects');
+      renderProjects();
+    } else if (mType==='certificate') {
+      mItem.name=getVal('m-name'); mItem.issuer=getVal('m-issuer'); mItem.date=getVal('m-date');
+      mItem.badge=getVal('m-badge')||'🏆'; mItem.url=getVal('m-url')||'';
+      if (!mItem.name) { alert('Nama sertifikat wajib diisi'); return; }
+      saveToArr('certificates');
+      renderCerts();
+    } else if (mType==='experience') {
+      mItem.role=getVal('m-role'); mItem.company=getVal('m-company'); mItem.period=getVal('m-period');
+      mItem.type=getVal('m-type'); mItem.desc=getVal('m-desc');
+      mItem.skills=getVal('m-skills').split(',').map(s=>s.trim()).filter(Boolean);
+      if (!mItem.role) { alert('Jabatan wajib diisi'); return; }
+      saveToArr('experiences');
+      renderExps();
+    } else if (mType==='skill') {
+      mItem.name=getVal('m-name'); mItem.icon=getVal('m-icon')||'⚡';
+      mItem.level=parseInt(getVal('m-level'))||80; mItem.color=getVal('m-color');
+      if (!mItem.name) { alert('Nama skill wajib diisi'); return; }
+      saveToArr('skills');
+      renderSkillsList();
+    }
+    saveLocal();
+    closeModal();
+    if (andPublish) { doPublish(); }
+    else showStatus('✅ Tersimpan! Klik 🚀 Publish untuk live.','success');
+  } catch(e) { showStatus('❌ Error: '+e.message,'error'); }
+}
+
+function saveToArr(key) {
+  if (!gData[key]) gData[key]=[];
+  if (mIdx!==null) gData[key][mIdx]=mItem; else gData[key].push(mItem);
+}
+
+function delItem(key, idx) {
+  if (!confirm('Hapus item ini?')) return;
+  gData[key].splice(idx,1); saveLocal(); renderAll();
+  showStatus('✅ Dihapus! Klik 🚀 Publish untuk live.','success');
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); mType=mIdx=mItem=null; }
+function closeModalBg(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+// ── UTILS ─────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function getVal(id){return document.getElementById(id)?.value?.trim()||'';}
+function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v||'';}
+function emptyMsg(t){return `<div style="color:var(--text3);padding:2rem;text-align:center;background:var(--bg3);border-radius:10px">Belum ada ${t}. Klik "+ Tambah".</div>`;}
+
+// ── AUTO START ────────────────────────────────────
+if (sessionStorage.getItem('adminOk') === '1') {
+  window.addEventListener('DOMContentLoaded', initAdmin);
+}
+</script>
+</body>
+</html>

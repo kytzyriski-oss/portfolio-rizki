@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <!-- Edit Here: Update SEO info -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muhammad Rizki Kurniawan — Portfolio</title>
+  <meta name="description" content="Muhammad Rizki Kurniawan — Vibe Coder, Cyber Security Expert, AI Prompt Engineer, Video Editor, Photographer & Data Scientist based in Indonesia.">
+  <meta name="keywords" content="Muhammad Rizki Kurniawan, portfolio, vibe coding, cyber security, AI prompt engineer, data science, Indonesia">
+  <meta name="author" content="Muhammad Rizki Kurniawan">
+  <!-- OG Tags -->
+  <meta property="og:title" content="Muhammad Rizki Kurniawan — Portfolio">
+  <meta property="og:description" content="Multi-disciplinary creator: Vibe Coder, Cyber Security, AI Prompt Engineer, Video/Photo Editor, Photographer, Data Scientist.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rizkikurniawan.netlify.app">
+  <!-- Security Headers via meta -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <!-- Canonical -->
+  <link rel="canonical" href="https://rizkikurniawan.netlify.app">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- CDN Libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
+  <!-- EmailJS (optional) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Muhammad Rizki Kurniawan",
+    "jobTitle": "Full-Stack Developer & AI Prompt Engineer",
+    "url": "https://rizkikurniawan.netlify.app",
+    "address": { "@type": "PostalAddress", "addressCountry": "ID" }
+  }
+  </script>
+</head>
+<body>
+
+<!-- ── LOADING SCREEN ── -->
+<div id="loading-screen">
+  <div class="loader-name">MRK</div>
+  <div class="loader-bar"><div class="loader-progress"></div></div>
+  <div class="loader-text">Initializing...</div>
+</div>
+
+<!-- ── PARTICLES BG ── -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-container"></div>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <div class="nav-brand">MRK.</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#certificates">Certificates</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="theme-toggle" title="Toggle Theme">☀️</button>
+  <button class="nav-hamburger" aria-label="Toggle Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="nav-mobile-menu">
+  <a href="#about">About</a>
+  <a href="#portfolio">Portfolio</a>
+  <a href="#certificates">Certificates</a>
+  <a href="#experience">Experience</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ── HERO SECTION ── -->
+<!-- ═══════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Available for freelance projects
+    </div>
+    <h1 class="hero-name" id="hero-name">
+      <span>Muhammad Rizki</span><br>Kurniawan
+    </h1>
+    <div class="hero-typewriter">
+      <span id="hero-typewriter-text"></span>
+    </div>
+    <p class="hero-desc">
+      Passionate multi-disciplinary creator bridging technology, creativity, and security.
+      Building digital experiences that are functional, secure, and memorable.
+    </p>
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">View My Work 🚀</a>
+      <a href="#contact" class="btn-secondary">Get In Touch 💬</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <div class="scroll-text">SCROLL</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ── ABOUT SECTION ── -->
+<!-- ═══════════════════════════════════════ -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <h2 class="section-title">Who I Am</h2>
+  <p class="section-subtitle">A passionate creator at the intersection of code, creativity, and cybersecurity.</p>
+
+  <div class="about-grid" style="margin-top:3rem">
+    <div class="about-photo-wrap reveal">
+      <img id="about-avatar" class="about-photo" src="assets/images/profile.jpg" alt="Muhammad Rizki Kurniawan" onerror="this.style.display='none'; document.getElementById('about-avatar-placeholder').style.display='flex'">
+      <div id="about-avatar-placeholder" class="about-photo-placeholder" style="display:none">👤</div>
+      <div class="about-photo-frame"></div>
+    </div>
+
+    <div>
+      <p class="about-bio reveal" id="about-bio">Loading bio...</p>
+      <div class="about-meta reveal">
+        <div class="about-meta-item"><span class="icon">📍</span><span id="about-location">Indonesia</span></div>
+        <div class="about-meta-item"><span class="icon">📧</span><span id="about-email">rizki@example.com</span></div>
+        <div class="about-meta-item"><span class="icon">💼</span><span>Available for Freelance</span></div>
+        <div class="about-meta-item"><span class="icon">🌐</span><a id="github-link" href="#" target="_blank" rel="noopener">GitHub Profile</a></div>
+      </div>
+      <h3 class="reveal" style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:1rem">Skills & Expertise</h3>
+      <div class="skills-grid" id="skills-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ── PORTFOLIO SECTION ── -->
+<!-- ═══════════════════════════════════════ -->
+<section id="portfolio">
+  <div class="section-label">My Work</div>
+  <h2 class="section-title">Portfolio</h2>
+  <p class="section-subtitle">Projects spanning vibe coding, cybersecurity, AI, creative media, and data science.</p>
+
+  <!-- Search -->
+  <div class="portfolio-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="portfolio-search-input" placeholder="Search projects, tech, keywords..." autocomplete="off">
+  </div>
+
+  <!-- Filters -->
+  <div class="portfolio-filters" id="portfolio-filters">
+    <!-- Rendered by JS -->
+  </div>
+
+  <!-- Grid -->
+  <div class="portfolio-grid" id="portfolio-grid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ── CERTIFICATES SECTION ── -->
+<!-- ═══════════════════════════════════════ -->
+<section id="certificates" style="max-width:100%;background:var(--bg2);">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;padding:clamp(4rem,10vw,8rem) clamp(1rem,5vw,3rem);">
+    <div class="section-label">Credentials</div>
+    <h2 class="section-title">Certificates</h2>
+    <p class="section-subtitle">Professional certifications demonstrating expertise across multiple domains.</p>
+    <div class="certs-grid" id="certs-grid">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ── EXPERIENCE SECTION ── -->
+<!-- ═══════════════════════════════════════ -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <h2 class="section-title">Experience</h2>
+  <p class="section-subtitle">Professional journey building expertise across technology and creative domains.</p>
+  <div class="timeline" id="experience-timeline">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ── CONTACT SECTION ── -->
+<!-- ═══════════════════════════════════════ -->
+<section id="contact" style="max-width:100%;background:var(--bg2);">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;padding:clamp(4rem,10vw,8rem) clamp(1rem,5vw,3rem);">
+    <div class="section-label">Let's Talk</div>
+    <h2 class="section-title">Get In Touch</h2>
+    <p class="section-subtitle">Have a project in mind? Let's build something amazing together.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3>Let's collaborate 🤝</h3>
+        <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Drop me a message!</p>
+        <div class="contact-links">
+          <a class="contact-link" id="contact-email" href="mailto:rizki@example.com">
+            <span class="link-icon">📧</span>
+            <span>rizki@example.com</span>
+          </a>
+          <a class="contact-link" id="github-link-2" href="#" target="_blank" rel="noopener">
+            <span class="link-icon">🐙</span>
+            <span>GitHub</span>
+          </a>
+          <a class="contact-link" id="linkedin-link" href="#" target="_blank" rel="noopener">
+            <span class="link-icon">💼</span>
+            <span>LinkedIn</span>
+          </a>
+          <a class="contact-link" id="instagram-link" href="#" target="_blank" rel="noopener">
+            <span class="link-icon">📸</span>
+            <span>Instagram</span>
+          </a>
+        </div>
+      </div>
+
+      <form id="contact-form" class="contact-form reveal" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name *</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+            <span class="form-error"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            <span class="form-error"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject *</label>
+          <input type="text" id="subject" name="subject" placeholder="What's this about?" required>
+          <span class="form-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+          <span class="form-error"></span>
+        </div>
+        <button type="submit" class="btn-submit">Send Message 🚀</button>
+        <div class="form-success">✅ Message sent! I'll get back to you soon.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">MRK.</div>
+  <div class="footer-copy">
+    © 2024 Muhammad Rizki Kurniawan · Built with ❤️ using Vanilla JS
+  </div>
+  <div class="footer-socials">
+    <a class="footer-social" data-link="github" href="#" target="_blank" rel="noopener" title="GitHub">🐙</a>
+    <a class="footer-social" data-link="linkedin" href="#" target="_blank" rel="noopener" title="LinkedIn">💼</a>
+    <a class="footer-social" data-link="instagram" href="#" target="_blank" rel="noopener" title="Instagram">📸</a>
+  </div>
+</footer>
+
+<!-- Main Script -->
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+{
+  "profile": {
+    "name": "Muhammad Rizki Kurniawan",
+    "tagline": "Vibe Coder | Cyber Security | AI Prompt Engineer",
+    "bio": "Passionate multi-disciplinary creator bridging the gap between technology, creativity, and security. I build digital experiences that are not just functional, but memorable — from secure web apps to stunning visual content.",
+    "avatar": "assets/images/profile.jpg",
+    "location": "Indonesia",
+    "email": "rizki@example.com",
+    "socials": {
+      "github": "https://github.com/rizkikurniawan",
+      "linkedin": "https://linkedin.com/in/rizkikurniawan",
+      "instagram": "https://instagram.com/rizkikurniawan"
+    }
+  },
+  "skills": [
+    {
+      "name": "Vibe Coding",
+      "icon": "💻",
+      "level": 90,
+      "color": "#00d4ff"
+    },
+    {
+      "name": "Cyber Security",
+      "icon": "🔐",
+      "level": 85,
+      "color": "#ff6b35"
+    },
+    {
+      "name": "AI Prompt Engineer",
+      "icon": "🤖",
+      "level": 92,
+      "color": "#a855f7"
+    },
+    {
+      "name": "Video Editing",
+      "icon": "🎬",
+      "level": 80,
+      "color": "#f59e0b"
+    },
+    {
+      "name": "Foto Editing",
+      "icon": "🖼️",
+      "level": 78,
+      "color": "#10b981"
+    },
+    {
+      "name": "Fotografi",
+      "icon": "📷",
+      "level": 75,
+      "color": "#ef4444"
+    },
+    {
+      "name": "Data Entry",
+      "icon": "📊",
+      "level": 88,
+      "color": "#3b82f6"
+    },
+    {
+      "name": "Data Science",
+      "icon": "🔬",
+      "level": 82,
+      "color": "#8b5cf6"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "VibeSync App",
+      "category": "Vibe Coding",
+      "desc": "Real-time collaborative coding platform with AI-assisted suggestions and live pair programming features.",
+      "image": "assets/images/project-vibesync.jpg",
+      "tech": [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "WebSocket",
+        "Node.js"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": true,
+      "date": "2024-03"
+    },
+    {
+      "id": 2,
+      "name": "NeonFlow Dashboard",
+      "category": "Vibe Coding",
+      "desc": "Aesthetic developer dashboard with neon UI, productivity tracker, and custom widget system.",
+      "image": "assets/images/project-neonflow.jpg",
+      "tech": [
+        "Vanilla JS",
+        "GSAP",
+        "CSS Grid",
+        "LocalStorage"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": false,
+      "date": "2024-01"
+    },
+    {
+      "id": 3,
+      "name": "PixelCraft Portfolio",
+      "category": "Vibe Coding",
+      "desc": "Pixel-art inspired portfolio generator with customizable themes and exportable static sites.",
+      "image": "assets/images/project-pixelcraft.jpg",
+      "tech": [
+        "JavaScript",
+        "Canvas API",
+        "CSS Variables",
+        "Web Components"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": false,
+      "date": "2023-11"
+    },
+    {
+      "id": 4,
+      "name": "SecureVault Pro",
+      "category": "Cyber Security",
+      "desc": "Password manager with AES-256 encryption, breach detection, and zero-knowledge architecture.",
+      "image": "assets/images/project-securevault.jpg",
+      "tech": [
+        "JavaScript",
+        "Web Crypto API",
+        "IndexedDB",
+        "PBKDF2"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": true,
+      "date": "2024-02"
+    },
+    {
+      "id": 5,
+      "name": "PhishGuard Scanner",
+      "category": "Cyber Security",
+      "desc": "Real-time phishing URL detector using heuristic analysis and ML-powered threat intelligence.",
+      "image": "assets/images/project-phishguard.jpg",
+      "tech": [
+        "Python",
+        "TensorFlow",
+        "Flask",
+        "VirusTotal API"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": false,
+      "date": "2023-10"
+    },
+    {
+      "id": 6,
+      "name": "PromptLab Studio",
+      "category": "AI Prompt Engineer",
+      "desc": "Advanced prompt engineering workspace with chain-of-thought templates and A/B testing for AI outputs.",
+      "image": "assets/images/project-promptlab.jpg",
+      "tech": [
+        "JavaScript",
+        "OpenAI API",
+        "Anthropic API",
+        "React"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": true,
+      "date": "2024-04"
+    },
+    {
+      "id": 7,
+      "name": "AutoContent AI",
+      "category": "AI Prompt Engineer",
+      "desc": "Automated content generation pipeline using structured prompts for social media, blogs, and marketing copy.",
+      "image": "assets/images/project-autocontent.jpg",
+      "tech": [
+        "Python",
+        "LangChain",
+        "GPT-4",
+        "Streamlit"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": false,
+      "date": "2024-01"
+    },
+    {
+      "id": 8,
+      "name": "CineCut Pro",
+      "category": "Editing Video/Foto",
+      "desc": "Professional short-form video editing with motion graphics templates for brand campaigns.",
+      "image": "assets/images/project-cinecut.jpg",
+      "tech": [
+        "Premiere Pro",
+        "After Effects",
+        "DaVinci Resolve"
+      ],
+      "url": "#",
+      "github": null,
+      "featured": false,
+      "date": "2023-12"
+    },
+    {
+      "id": 9,
+      "name": "BrandGlow Retouch",
+      "category": "Editing Video/Foto",
+      "desc": "High-end product photography retouching and brand identity visual packages for e-commerce.",
+      "image": "assets/images/project-brandglow.jpg",
+      "tech": [
+        "Photoshop",
+        "Lightroom",
+        "Capture One"
+      ],
+      "url": "#",
+      "github": null,
+      "featured": false,
+      "date": "2023-09"
+    },
+    {
+      "id": 10,
+      "name": "Urban Frames",
+      "category": "Fotografi",
+      "desc": "Street photography collection capturing the pulse of Indonesian urban life through cinematic compositions.",
+      "image": "assets/images/project-urbanframes.jpg",
+      "tech": [
+        "Sony Alpha",
+        "Lightroom",
+        "Street Photography"
+      ],
+      "url": "#",
+      "github": null,
+      "featured": false,
+      "date": "2024-03"
+    },
+    {
+      "id": 11,
+      "name": "Golden Hour Series",
+      "category": "Fotografi",
+      "desc": "Landscape and portrait photography series utilizing dramatic natural lighting in Indonesian archipelago.",
+      "image": "assets/images/project-goldenhour.jpg",
+      "tech": [
+        "Canon EOS",
+        "ACR",
+        "Photoshop"
+      ],
+      "url": "#",
+      "github": null,
+      "featured": false,
+      "date": "2023-08"
+    },
+    {
+      "id": 12,
+      "name": "InsightFlow Analytics",
+      "category": "Data Entry/Data Science",
+      "desc": "Business intelligence dashboard processing 1M+ rows with automated anomaly detection and forecasting.",
+      "image": "assets/images/project-insightflow.jpg",
+      "tech": [
+        "Python",
+        "Pandas",
+        "Plotly",
+        "Scikit-learn",
+        "SQL"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": true,
+      "date": "2024-04"
+    },
+    {
+      "id": 13,
+      "name": "DataClean Pipeline",
+      "category": "Data Entry/Data Science",
+      "desc": "Automated data validation and cleaning pipeline reducing manual entry errors by 94% for enterprise clients.",
+      "image": "assets/images/project-dataclean.jpg",
+      "tech": [
+        "Python",
+        "Pandas",
+        "OpenRefine",
+        "PostgreSQL"
+      ],
+      "url": "#",
+      "github": "#",
+      "featured": false,
+      "date": "2023-11"
+    }
+  ],
+  "certificates": [
+    {
+      "id": 1,
+      "name": "Certified Ethical Hacker (CEH)",
+      "issuer": "EC-Council",
+      "date": "2024-01",
+      "image": "assets/images/cert-ceh.jpg",
+      "url": "#",
+      "badge": "🛡️"
+    },
+    {
+      "id": 2,
+      "name": "Google Data Analytics Professional",
+      "issuer": "Google / Coursera",
+      "date": "2023-09",
+      "image": "assets/images/cert-google.jpg",
+      "url": "#",
+      "badge": "📊"
+    },
+    {
+      "id": 3,
+      "name": "AI Fundamentals & Prompt Engineering",
+      "issuer": "DeepLearning.AI",
+      "date": "2023-11",
+      "image": "assets/images/cert-ai.jpg",
+      "url": "#",
+      "badge": "🤖"
+    }
+  ],
+  "experiences": [
+    {
+      "id": 1,
+      "role": "Freelance Full-Stack Developer & AI Engineer",
+      "company": "Self-Employed",
+      "period": "2022 – Present",
+      "type": "Freelance",
+      "desc": "Building custom web applications, AI-powered tools, and automation solutions for clients across Indonesia and Southeast Asia. Specializing in modern Vanilla JS architectures and AI prompt optimization.",
+      "skills": [
+        "JavaScript",
+        "Python",
+        "AI/ML",
+        "Web Security"
+      ]
+    },
+    {
+      "id": 2,
+      "role": "Cyber Security Analyst",
+      "company": "PT Digital Nusantara",
+      "period": "2021 – 2022",
+      "type": "Full-time",
+      "desc": "Conducted penetration testing, vulnerability assessments, and security audits for enterprise clients. Implemented SIEM solutions and developed internal security training programs.",
+      "skills": [
+        "Penetration Testing",
+        "SIEM",
+        "Network Security",
+        "Risk Assessment"
+      ]
+    },
+    {
+      "id": 3,
+      "role": "Data Analyst & Content Creator",
+      "company": "Startup Kreativa ID",
+      "period": "2020 – 2021",
+      "type": "Full-time",
+      "desc": "Led data-driven marketing campaigns using analytics insights, created video/photo content for social media growth (50K+ followers), and managed data entry operations for e-commerce platform.",
+      "skills": [
+        "Data Analytics",
+        "Content Creation",
+        "Photography",
+        "Video Editing"
+      ]
+    }
+  ]
+}
